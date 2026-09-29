@@ -1,0 +1,1067 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="A timed 60-minute practice exam on floating-point arithmetic and root finding for CS 314 (Numerical Methods), with worked solutions and self-scoring.">
+<meta property="og:title" content="CS 314 Practice Midterm">
+<meta property="og:description" content="A timed 60-minute practice exam on floating-point arithmetic and root finding for CS 314 (Numerical Methods), with worked solutions and self-scoring.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://cs314.rohankannan.com/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='9' width='6' height='14' rx='2' fill='%23C0395A'/%3E%3Crect x='9' y='9' width='10' height='14' rx='2' fill='%230072BD'/%3E%3Crect x='21' y='9' width='10' height='14' rx='2' fill='%232E8B57'/%3E%3C/svg%3E">
+<title>CS 314 Practice Midterm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap">
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+    svg: { fontCache: 'global' },
+    options: { enableMenu: false, skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #EDF1F4;
+    --sheet: #FFFFFF;
+    --ink: #16212E;
+    --ink-2: #384556;
+    --muted: #5F6C7E;
+    --rule: #D6DEE5;
+    --rule-strong: #B5C1CC;
+    --accent: #0072BD;
+    --accent-ink: #005C99;
+    --accent-soft: #E4F0F9;
+    --on-accent: #FFFFFF;
+    --warm: #B94413;
+    --warm-soft: #FBE9E0;
+    --sol-bg: #F6F9FB;
+    --grid: rgba(0, 114, 189, 0.07);
+    --code-bg: #F2F5F8;
+    --bar-bg: rgba(255, 255, 255, 0.93);
+    --bit-s: #F7DEE5; --bit-s-ink: #8B2342;
+    --bit-e: #DDEBF8; --bit-e-ink: #0B4E85;
+    --bit-f: #DFF2E5; --bit-f-ink: #1C6A39;
+    --serif: "Source Serif 4", "Source Serif Pro", Georgia, "Times New Roman", serif;
+    --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0C1217; --sheet: #131B23; --ink: #E2E8EE; --ink-2: #BCC7D2; --muted: #8E9BAA;
+      --rule: #24303B; --rule-strong: #36444F; --accent: #4BA4E6; --accent-ink: #86C2EF; --accent-soft: #0F2638; --on-accent: #06131D;
+      --warm: #F08A4B; --warm-soft: #37200F; --sol-bg: #111A22; --grid: rgba(75, 164, 230, 0.07);
+      --code-bg: #0F161D; --bar-bg: rgba(19, 27, 35, 0.93);
+      --bit-s: #3A1A25; --bit-s-ink: #F3A9BD; --bit-e: #11283B; --bit-e-ink: #9ECCF3; --bit-f: #122E1D; --bit-f-ink: #9CD9AF;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0C1217; --sheet: #131B23; --ink: #E2E8EE; --ink-2: #BCC7D2; --muted: #8E9BAA;
+    --rule: #24303B; --rule-strong: #36444F; --accent: #4BA4E6; --accent-ink: #86C2EF; --accent-soft: #0F2638; --on-accent: #06131D;
+    --warm: #F08A4B; --warm-soft: #37200F; --sol-bg: #111A22; --grid: rgba(75, 164, 230, 0.07);
+    --code-bg: #0F161D; --bar-bg: rgba(19, 27, 35, 0.93);
+    --bit-s: #3A1A25; --bit-s-ink: #F3A9BD; --bit-e: #11283B; --bit-e-ink: #9ECCF3; --bit-f: #122E1D; --bit-f-ink: #9CD9AF;
+  }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 116px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { background: var(--bg); color: var(--ink); font-family: var(--serif); font-size: 17px; line-height: 1.62; }
+  a { color: var(--accent-ink); }
+  code { font-family: var(--mono); font-size: 0.86em; background: var(--code-bg); border: 1px solid var(--rule); padding: 0 5px; border-radius: 4px; }
+  em { font-style: italic; }
+
+  /* Toolbar */
+  .bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bar-bg); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border-bottom: 1px solid var(--rule); font-family: var(--sans); }
+  .bar-inner { max-width: 880px; margin: 0 auto; padding: 8px 16px 6px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  .bar-title { font-weight: 600; font-size: 14px; color: var(--ink); text-decoration: none; margin-right: auto; white-space: nowrap; }
+  .timer { display: flex; align-items: center; gap: 6px; }
+  #clock { font-family: var(--mono); font-size: 19px; font-weight: 600; font-variant-numeric: tabular-nums; min-width: 5ch; text-align: right; color: var(--ink); }
+  .timer.over #clock { color: var(--warm); }
+  .btn { font: 500 13px/1 var(--sans); padding: 8px 11px; border-radius: 6px; border: 1px solid var(--rule-strong); background: var(--sheet); color: var(--ink); cursor: pointer; }
+  .btn:hover { border-color: var(--accent); color: var(--accent-ink); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .btn.primary:hover { color: var(--on-accent); filter: brightness(1.06); }
+  .btn.quiet { border-color: transparent; background: transparent; color: var(--muted); padding-inline: 6px; }
+  .btn:focus-visible, a:focus-visible, summary:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .bar-score { font: 500 13px var(--sans); color: var(--muted); white-space: nowrap; }
+  .bar-score b { color: var(--ink); font-variant-numeric: tabular-nums; font-weight: 700; }
+  .jump { max-width: 880px; margin: 0 auto; padding: 0 12px 7px; display: flex; gap: 2px; overflow-x: auto; font: 500 13px var(--sans); scrollbar-width: none; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a { color: var(--muted); text-decoration: none; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+  .jump a:hover { color: var(--accent-ink); background: var(--accent-soft); }
+  .jump .sep { color: var(--rule-strong); padding: 3px 2px; }
+  .progress { height: 3px; }
+  .progress span { display: block; height: 100%; width: 0; background: var(--accent); transition: width 0.3s linear; }
+  .bar.over .progress span { background: var(--warm); }
+  @media (prefers-reduced-motion: reduce) { .progress span { transition: none; } }
+
+  /* Page */
+  .wrap { max-width: 880px; margin: 0 auto; padding-inline: 16px; padding-block: 22px 64px; }
+  .sheet { background: var(--sheet); border: 1px solid var(--rule); border-radius: 10px; padding: clamp(20px, 5.2vw, 56px); }
+  .eyebrow { font: 600 12px/1.3 var(--sans); letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent-ink); }
+  h1 { font-family: var(--serif); font-weight: 700; font-size: clamp(34px, 6.4vw, 48px); line-height: 1.06; letter-spacing: -0.012em; margin: 10px 0 14px; text-wrap: balance; }
+  .lede { font-size: 18.5px; line-height: 1.55; color: var(--ink-2); max-width: 62ch; margin: 0 0 18px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 22px; padding: 0; list-style: none; font: 500 13px var(--sans); }
+  .meta li { padding: 4px 10px; border-radius: 999px; background: var(--code-bg); border: 1px solid var(--rule); color: var(--ink-2); }
+  .meta li.hl { background: var(--warm-soft); border-color: transparent; color: var(--warm); font-weight: 600; }
+  .rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px 28px; padding: 14px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); font-size: 15.5px; }
+  .rules h3, .howto h3, .cover h3 { font: 600 12px/1.3 var(--sans); letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
+  .rules p { margin: 0; }
+  .howto { margin: 20px 0 0; }
+  .howto ol { margin: 6px 0 0; padding-left: 1.3em; display: grid; gap: 4px; font-size: 16px; }
+
+  /* Score sheet */
+  .cover { margin-top: 30px; }
+  .table-wrap { overflow-x: auto; margin: 10px 0; }
+  table.cover-t { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 14px; min-width: 460px; }
+  .cover-t th { font-weight: 600; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule-strong); }
+  .cover-t td { padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: baseline; }
+  .cover-t .n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .cover-t td a { color: var(--ink); text-decoration: none; font-weight: 500; }
+  .cover-t td a:hover { color: var(--accent-ink); text-decoration: underline; }
+  .cover-t tfoot td { font-weight: 700; border-bottom: none; padding-top: 10px; }
+  .cover-foot { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; font: 400 13.5px/1.5 var(--sans); color: var(--muted); }
+  .cover-foot p { margin: 0; max-width: 60ch; }
+
+  /* Problems */
+  .problem { margin-top: 40px; padding-top: 34px; border-top: 1px solid var(--rule); }
+  .p-num { font: 600 12px/1.3 var(--sans); letter-spacing: 0.09em; text-transform: uppercase; color: var(--muted); }
+  .problem h2 { font: 600 23px/1.25 var(--sans); margin: 5px 0 10px; text-wrap: balance; letter-spacing: -0.005em; }
+  .p-meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; font: 500 12.5px/1.2 var(--sans); }
+  .chip { padding: 4px 9px; border-radius: 999px; border: 1px solid var(--rule); color: var(--muted); white-space: nowrap; }
+  .chip.pts { background: var(--accent-soft); border-color: transparent; color: var(--accent-ink); font-weight: 600; }
+  .problem > p { margin: 0 0 10px; }
+  ol.parts { list-style: none; counter-reset: part; padding: 0; margin: 12px 0 0; display: grid; gap: 14px; }
+  ol.parts > li { counter-increment: part; position: relative; padding-left: 2.25em; }
+  ol.parts > li::before { content: "(" counter(part, lower-alpha) ")"; position: absolute; left: 0; top: 0; font-weight: 600; color: var(--ink-2); }
+  ol.sub { list-style: none; counter-reset: sub; padding: 0; margin: 8px 0 0; display: grid; gap: 6px; }
+  ol.sub > li { counter-increment: sub; position: relative; padding-left: 2.1em; }
+  ol.sub > li::before { content: "(" counter(sub, lower-roman) ")"; position: absolute; left: 0; color: var(--ink-2); }
+  .pp { font: 600 12px var(--sans); color: var(--muted); margin-right: 5px; white-space: nowrap; }
+  .given { font-size: 15.5px; color: var(--ink-2); }
+
+  pre.console { font: 13.5px/1.5 var(--mono); background: var(--code-bg); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 14px; overflow-x: auto; margin: 10px 0; color: var(--ink-2); white-space: pre; }
+  pre.console .p { color: var(--accent-ink); font-weight: 600; }
+
+  .bits { display: inline-flex; flex-wrap: wrap; gap: 3px; font: 500 14.5px/1.5 var(--mono); vertical-align: baseline; }
+  .bits > span { padding: 0 6px; border-radius: 4px; }
+  .b-s { background: var(--bit-s); color: var(--bit-s-ink); }
+  .b-e { background: var(--bit-e); color: var(--bit-e-ink); }
+  .b-f { background: var(--bit-f); color: var(--bit-f-ink); }
+  .layout { display: flex; flex-wrap: wrap; gap: 4px; margin: 10px 0 4px; font: 500 13px/1.3 var(--sans); }
+  .layout > div { display: grid; gap: 3px; text-align: center; }
+  .layout .cell { font: 600 15px/1 var(--mono); padding: 9px 12px; border-radius: 5px; letter-spacing: 0.25em; }
+  .layout small { color: var(--muted); font-size: 12px; }
+
+  table.num { border-collapse: collapse; font: 14px/1.4 var(--mono); font-variant-numeric: tabular-nums; }
+  table.num th { font: 600 12px/1.3 var(--sans); color: var(--muted); text-align: right; padding: 6px 12px; border-bottom: 1px solid var(--rule-strong); white-space: nowrap; }
+  table.num td { text-align: right; padding: 5px 12px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+  table.num th:first-child, table.num td:first-child { text-align: left; }
+  table.num td.l, table.num th.l { text-align: left; }
+
+  /* Solutions */
+  details.sol { margin-top: 18px; }
+  details.sol > summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font: 600 13.5px/1 var(--sans); color: var(--accent-ink); padding: 8px 13px 8px 11px; border: 1px solid var(--rule-strong); border-radius: 6px; background: var(--sheet); user-select: none; }
+  details.sol > summary::-webkit-details-marker { display: none; }
+  details.sol > summary::before { content: ""; width: 0; height: 0; border-left: 6px solid currentColor; border-top: 5px solid transparent; border-bottom: 5px solid transparent; transition: transform 0.15s ease; }
+  details.sol[open] > summary::before { transform: rotate(90deg); }
+  details.sol > summary:hover { border-color: var(--accent); }
+  .when-open { display: none; }
+  details[open] > summary .when-open { display: inline; }
+  details[open] > summary .when-closed { display: none; }
+  .sol-body { margin-top: 12px; padding: 18px 20px; border: 1px solid var(--rule); border-radius: 8px; background-color: var(--sol-bg); background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 22px 22px; font-size: 16.5px; }
+  .sol-body p { margin: 0 0 10px; }
+  .sol-body ul { margin: 0 0 10px; padding-left: 1.2em; display: grid; gap: 4px; }
+  .sol-body .part + .part { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--rule-strong); }
+  .pl { font-family: var(--sans); font-weight: 700; color: var(--ink); margin-right: 3px; }
+  .ans { background: var(--accent-soft); color: var(--ink); padding: 1px 6px; border-radius: 4px; font-weight: 600; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .why { font-size: 15.5px; color: var(--ink-2); }
+  .why b.tag { font: 700 11px/1 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--warm); margin-right: 6px; }
+  .score-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font: 500 14px var(--sans); margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--rule-strong); }
+  .score-row input { width: 5.2em; font: 600 15px var(--mono); padding: 6px 8px; border: 1px solid var(--rule-strong); border-radius: 6px; background: var(--sheet); color: var(--ink); }
+  .score-row span { color: var(--muted); }
+
+  mjx-container[jax="SVG"][display="true"] { overflow-x: auto; overflow-y: hidden; max-width: 100%; padding: 2px 0; }
+
+  /* Number line */
+  .figure { overflow-x: auto; margin: 6px 0 12px; }
+  .nl { display: block; width: 100%; min-width: 560px; height: auto; }
+  .nl .axis { stroke: var(--ink-2); stroke-width: 1.5; }
+  .nl .tn { stroke: var(--accent); stroke-width: 2; }
+  .nl .ts { stroke: var(--muted); stroke-width: 1.5; }
+  .nl .lab { fill: var(--ink-2); font: 12px var(--sans); }
+  .nl .reg { fill: var(--muted); font: 11.5px var(--sans); }
+  .nl .brk { stroke: var(--rule-strong); stroke-width: 1; fill: none; }
+  .nl .xpt { fill: var(--warm); }
+  .nl .arr { stroke: var(--warm); stroke-width: 1.5; fill: none; }
+  .nl .ah { fill: var(--warm); }
+  .nl .xlab { fill: var(--warm); font: 600 12px var(--sans); }
+
+  /* Extra + notes */
+  .section-head { margin-top: 56px; padding-top: 34px; border-top: 3px double var(--rule-strong); }
+  .section-head h2 { font: 700 28px/1.2 var(--serif); margin: 6px 0 8px; }
+  .section-head p { margin: 0; color: var(--ink-2); max-width: 64ch; }
+  .notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 36px; margin-top: 16px; }
+  .notes-grid h3 { font: 600 13px/1.3 var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-ink); margin: 12px 0 6px; }
+  .notes-grid ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; font-size: 15.5px; }
+  @media (max-width: 720px) { .notes-grid { grid-template-columns: 1fr; } }
+
+  .foot { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--rule); font: 400 13px/1.55 var(--sans); color: var(--muted); }
+  .foot p { margin: 0 0 6px; max-width: 70ch; }
+
+  @media (max-width: 560px) {
+    body { font-size: 16.5px; }
+    .bar-title { display: none; }
+    #clock { font-size: 17px; }
+    .problem h2 { font-size: 20px; }
+    ol.parts > li { padding-left: 2em; }
+    .sol-body { padding: 14px 14px; }
+  }
+</style>
+<style>body { margin: 0; } img { max-width: 100%; } [hidden] { display: none !important; }</style>
+</head>
+<body>
+<header class="bar" id="bar">
+  <div class="bar-inner">
+    <a class="bar-title" href="#top">CS 314 · Practice Midterm 1</a>
+    <div class="timer" id="timer" role="group" aria-label="60-minute exam timer">
+      <span id="clock" aria-live="off">60:00</span>
+      <button class="btn primary" id="t-start" type="button" aria-pressed="false">Start</button>
+      <button class="btn" id="t-reset" type="button">Reset</button>
+    </div>
+    <button class="btn" id="reveal" type="button" aria-pressed="false">Show all solutions</button>
+    <div class="bar-score">Score <b id="bar-total">–</b> / 100</div>
+  </div>
+  <nav class="jump" aria-label="Jump to problem">
+    <a href="#p1">1 Short</a><a href="#p2">2 Binary</a><a href="#p3">3 10-bit float</a><a href="#p4">4 Cancellation</a><a href="#p5">5 Bisection &amp; FPI</a><a href="#p6">6 Newton</a><a href="#p7">7 Secant</a><span class="sep">|</span><a href="#extra">Extra practice</a><a href="#notes">Note sheet</a>
+  </nav>
+  <div class="progress" aria-hidden="true"><span id="prog"></span></div>
+</header>
+
+<div class="wrap" id="top">
+<main class="sheet">
+
+  <section class="intro">
+    <div class="eyebrow">CS 314 · Numerical Methods · Fall 2026</div>
+    <h1>Practice Midterm 1</h1>
+    <p class="lede">Floating-point arithmetic and nonlinear equations in one variable, written from your Lecture 1–9 notes and Homeworks 1–2. Your Lecture 1 slides say exam problems will be similar to the homework but different, so each problem here mirrors a homework or lecture problem with new numbers.</p>
+    <ul class="meta">
+      <li class="hl">60 minutes</li>
+      <li>100 points</li>
+      <li>7 problems</li>
+      <li>Real exam: Thu Oct 1, 8–9 PM</li>
+    </ul>
+    <div class="rules">
+      <div>
+        <h3>Allowed</h3>
+        <p>One legal-size page of notes (both sides) and a basic scientific calculator.</p>
+      </div>
+      <div>
+        <h3>Not allowed</h3>
+        <p>Programmable or graphing calculators, the internet, your computer, the textbook.</p>
+      </div>
+    </div>
+    <div class="howto">
+      <h3>How to use this</h3>
+      <ol>
+        <li>Press <b>Start</b> and work on paper for 60 minutes with only your note sheet and calculator.</li>
+        <li>Then open each solution, grade yourself, and type your score at the bottom of it. Scores stay in this browser.</li>
+        <li>Explain each solution out loud to a classmate, as your TA suggested. Any step you can't explain points to the homework problem to redo before Thursday.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="cover" aria-labelledby="cover-h">
+    <h3 id="cover-h">Score sheet</h3>
+    <div class="table-wrap">
+      <table class="cover-t">
+        <thead><tr><th>#</th><th>Topic</th><th class="n">Time</th><th class="n">Points</th><th class="n">Your score</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><a href="#p1">Short answers</a></td><td class="n">8 min</td><td class="n">15</td><td class="n" data-score-for="s1">–</td></tr>
+          <tr><td>2</td><td><a href="#p2">Binary and integer representations</a></td><td class="n">7 min</td><td class="n">12</td><td class="n" data-score-for="s2">–</td></tr>
+          <tr><td>3</td><td><a href="#p3">A 10-bit floating-point system</a></td><td class="n">12 min</td><td class="n">20</td><td class="n" data-score-for="s3">–</td></tr>
+          <tr><td>4</td><td><a href="#p4">Cancellation and the quadratic formula</a></td><td class="n">8 min</td><td class="n">13</td><td class="n" data-score-for="s4">–</td></tr>
+          <tr><td>5</td><td><a href="#p5">Bisection and fixed-point iteration</a></td><td class="n">11 min</td><td class="n">18</td><td class="n" data-score-for="s5">–</td></tr>
+          <tr><td>6</td><td><a href="#p6">Newton's method</a></td><td class="n">8 min</td><td class="n">12</td><td class="n" data-score-for="s6">–</td></tr>
+          <tr><td>7</td><td><a href="#p7">Secant method and convergence rates</a></td><td class="n">6 min</td><td class="n">10</td><td class="n" data-score-for="s7">–</td></tr>
+        </tbody>
+        <tfoot><tr><td></td><td>Total</td><td class="n">60 min</td><td class="n">100</td><td class="n" id="cover-total">–</td></tr></tfoot>
+      </table>
+    </div>
+    <div class="cover-foot">
+      <p>Scope: Lectures 1–9 and HW 1–2. Conditioning of problems comes after Lecture 9, so it isn't on this exam.</p>
+      <button class="btn quiet" id="clear-scores" type="button">Clear my scores</button>
+    </div>
+  </section>
+
+  <!-- ===================== PROBLEM 1 ===================== -->
+  <article class="problem" id="p1">
+    <div class="p-num">Problem 1</div>
+    <h2>Short answers</h2>
+    <div class="p-meta"><span class="chip pts">15 pts</span><span class="chip">≈ 8 min</span><span class="chip">Like pop quizzes 1–2 and the Lecture 1 and 7 demos</span></div>
+    <p>Answer each part in one to three sentences. Each part is worth 3 points.</p>
+    <ol class="parts">
+      <li>The toy floating-point system from Lectures 3–4 uses 5 bits: 1 sign bit, 2 exponent bits and 2 fraction bits. Exponent field <code>00</code> holds zero and the subnormals \((0.b_1b_2)_2\times 2^{0}\), field <code>11</code> holds Inf and NaN, and the bias is 1, so the normalized numbers are \(\pm(1.b_1b_2)_2\times 2^{e}\) with \(e\in\{0,1\}\). Using round to nearest (ties to even), find \(\mathrm{fl}(2.25)\), \(\mathrm{fl}(3.3)\) and \(\mathrm{fl}(0.6)\).</li>
+      <li>In MATLAB, which uses IEEE double precision:
+<pre class="console"><span class="p">&gt;&gt;</span> 10^20 + 10 - 10^20
+ans =
+     0
+<span class="p">&gt;&gt;</span> 10^20 - 10^20 + 10
+ans =
+    10</pre>
+      Explain the first result using the spacing of doubles near \(10^{20}\).</li>
+      <li>Pop quiz 2 asked this. The normalized binary representation of a float, \(1.b_1\ldots b_t\times 2^e\), is unique. Is the normalized binary representation of a <em>real number</em> also unique? Give a reason or an example.</li>
+      <li>Bisection is called a <em>global</em> method, while Newton's method and the secant method are called <em>local</em> methods. What do these words mean here, and how does MATLAB's <code>fzero</code> use this?</li>
+      <li>In Lecture 7, Newton's method applied to \(f(x)=(x-3)^4\) from \(x_0=4\) printed:
+<pre class="console"> 1   3.7500000000000000
+ 2   3.5625000000000000
+ 3   3.4218750000000000
+ 4   3.3164062500000000
+ ...
+20   3.0031712119389340</pre>
+      What is the rate of convergence? Why isn't it quadratic?</li>
+    </ol>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <div class="part">
+          <p><span class="pl">(a)</span> The positive floats are the subnormals 0.25, 0.5, 0.75, then 1, 1.25, 1.5, 1.75 (\(e=0\), spacing 0.25) and 2, 2.5, 3, 3.5 (\(e=1\), spacing 0.5).</p>
+          <div class="figure">
+            <svg class="nl" viewBox="0 0 640 132" role="img" aria-label="Number line of the toy system's positive floats, showing 0.6 rounding to 0.5, 2.25 rounding to 2, and 3.3 rounding to 3.5">
+              <defs><marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+              <line class="axis" x1="20" y1="72" x2="624" y2="72"/>
+              <line class="ts" x1="30" y1="64" x2="30" y2="80"/>
+              <line class="ts" x1="68.7" y1="64" x2="68.7" y2="80"/>
+              <line class="ts" x1="107.3" y1="64" x2="107.3" y2="80"/>
+              <line class="ts" x1="146" y1="64" x2="146" y2="80"/>
+              <line class="tn" x1="184.7" y1="60" x2="184.7" y2="84"/>
+              <line class="tn" x1="223.3" y1="60" x2="223.3" y2="84"/>
+              <line class="tn" x1="262" y1="60" x2="262" y2="84"/>
+              <line class="tn" x1="300.7" y1="60" x2="300.7" y2="84"/>
+              <line class="tn" x1="339.3" y1="60" x2="339.3" y2="84"/>
+              <line class="tn" x1="416.7" y1="60" x2="416.7" y2="84"/>
+              <line class="tn" x1="494" y1="60" x2="494" y2="84"/>
+              <line class="tn" x1="571.3" y1="60" x2="571.3" y2="84"/>
+              <text class="lab" x="30" y="100" text-anchor="middle">0</text>
+              <text class="lab" x="68.7" y="100" text-anchor="middle">.25</text>
+              <text class="lab" x="107.3" y="100" text-anchor="middle">.5</text>
+              <text class="lab" x="146" y="100" text-anchor="middle">.75</text>
+              <text class="lab" x="184.7" y="100" text-anchor="middle">1</text>
+              <text class="lab" x="223.3" y="100" text-anchor="middle">1.25</text>
+              <text class="lab" x="262" y="100" text-anchor="middle">1.5</text>
+              <text class="lab" x="300.7" y="100" text-anchor="middle">1.75</text>
+              <text class="lab" x="339.3" y="100" text-anchor="middle">2</text>
+              <text class="lab" x="416.7" y="100" text-anchor="middle">2.5</text>
+              <text class="lab" x="494" y="100" text-anchor="middle">3</text>
+              <text class="lab" x="571.3" y="100" text-anchor="middle">3.5</text>
+              <path class="brk" d="M68.7,108 v5 H146 v-5"/>
+              <path class="brk" d="M184.7,108 v5 H300.7 v-5"/>
+              <path class="brk" d="M339.3,108 v5 H571.3 v-5"/>
+              <text class="reg" x="107.3" y="127" text-anchor="middle">subnormals</text>
+              <text class="reg" x="242.7" y="127" text-anchor="middle">e = 0, gap 0.25</text>
+              <text class="reg" x="455.3" y="127" text-anchor="middle">e = 1, gap 0.5</text>
+              <circle class="xpt" cx="122.8" cy="72" r="4"/>
+              <path class="arr" d="M122.8,64 Q115,44 108.5,62" marker-end="url(#ah)"/>
+              <text class="xlab" x="118" y="34" text-anchor="middle">0.6 → 0.5</text>
+              <circle class="xpt" cx="378" cy="72" r="4"/>
+              <path class="arr" d="M378,64 Q359,36 341,61" marker-end="url(#ah)"/>
+              <text class="xlab" x="362" y="26" text-anchor="middle">2.25 → 2 (tie, even)</text>
+              <circle class="xpt" cx="540.4" cy="72" r="4"/>
+              <path class="arr" d="M540.4,64 Q556,42 570,61" marker-end="url(#ah)"/>
+              <text class="xlab" x="556" y="34" text-anchor="middle">3.3 → 3.5</text>
+            </svg>
+          </div>
+          <ul>
+            <li>\(2.25=(1.00\,|\,1)_2\times2^1\) is exactly halfway between \(2=(1.00)_2\times2^1\) and \(2.5=(1.01)_2\times2^1\). A tie goes to the neighbor whose last bit is 0, so <span class="ans">\(\mathrm{fl}(2.25)=2\)</span>.</li>
+            <li>3.3 is 0.2 from 3.5 and 0.3 from 3, so <span class="ans">\(\mathrm{fl}(3.3)=3.5\)</span>.</li>
+            <li>0.6 is 0.1 from 0.5 and 0.15 from 0.75, so <span class="ans">\(\mathrm{fl}(0.6)=0.5\)</span>.</li>
+          </ul>
+          <p class="why"><b class="tag">Why it matters</b>Here \(u=2^{-(t+1)}=2^{-3}=0.125\), yet \(\mathrm{fl}(0.6)\) has relative error \(0.1/0.6\approx0.167>u\). The bound \(|\delta|\le u\) only holds in the normalized range. Subnormals have fewer significant bits.</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(b)</span> MATLAB evaluates left to right. Since \(2^{66}\approx7.4\times10^{19}\le10^{20}\lt2^{67}\), doubles near \(10^{20}\) have the form \((1.b_1\ldots b_{52})_2\times2^{66}\) and are spaced \(2^{66-52}=2^{14}=16384\) apart. So \(10^{20}+10\) is within half a gap (8192) of \(10^{20}\) and <span class="ans">rounds back to \(10^{20}\)</span>; subtracting \(10^{20}\) then gives 0. In the second line \(10^{20}-10^{20}=0\) exactly, and \(0+10=10\).</p>
+          <p class="why"><b class="tag">Why it matters</b>Adding a small number to a much larger one can leave the large one unchanged, so floating-point addition is not associative.</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(c)</span> <span class="ans">No.</span> For example \(1=(1.000\ldots)_2\times2^0=(1.111\ldots)_2\times2^{-1}\), because \((0.111\ldots)_2=\tfrac12+\tfrac14+\tfrac18+\cdots=1\). Any real number with a terminating binary expansion also has an expansion ending in infinitely many 1s. A float stores only \(t\) fraction bits, so it can't have an infinite tail, and its representation is unique.</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(d)</span> <b>Global:</b> bisection converges whenever \(f\) is continuous on \([a,b]\) and \(\operatorname{sign}f(a)\ne\operatorname{sign}f(b)\), wherever the root is, because each step keeps an interval with a sign change (Intermediate Value Theorem). Its drawback is speed: the error bound only halves each step. <b>Local:</b> Newton and secant converge fast (quadratic, and order \(\approx1.618\)) but only when the starting guess or guesses are close enough to the root. From a poor start they can diverge or cycle.</p>
+          <p><code>fzero</code> is a <span class="ans">safeguarded</span> method. It combines bisection with the secant method and inverse quadratic interpolation: it takes the fast steps when they stay inside a bracketing interval and falls back on bisection otherwise.</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(e)</span> The errors are 1, 0.75, 0.5625, 0.421875, …, and each is \(\tfrac34\) of the one before: <span class="ans">linear convergence with \(C=\tfrac34\)</span>. Algebraically,</p>
+          \[x_{k+1}-3=(x_k-3)-\frac{(x_k-3)^4}{4(x_k-3)^3}=\tfrac34\,(x_k-3).\]
+          <p>The quadratic convergence theorem assumes \(f'(x_*)\ne0\). Here \(x_*=3\) is a root of multiplicity 4, so \(f'(3)=0\). For a root of multiplicity \(m\), Newton's error shrinks by the factor \(1-\tfrac1m\) each step, which is why 20 iterations only reached 3.0032.</p>
+        </div>
+        <div class="score-row"><label for="s1">Your score for Problem 1</label><input class="score" id="s1" type="number" inputmode="decimal" min="0" max="15" step="0.5" data-max="15"><span>/ 15</span></div>
+      </div>
+    </details>
+  </article>
+
+  <!-- ===================== PROBLEM 2 ===================== -->
+  <article class="problem" id="p2">
+    <div class="p-num">Problem 2</div>
+    <h2>Binary and integer representations</h2>
+    <div class="p-meta"><span class="chip pts">12 pts</span><span class="chip">≈ 7 min</span><span class="chip">Like HW1 #2, #3, #6 and HW2 #1(a)</span></div>
+    <ol class="parts">
+      <li><span class="pp">[4 pts]</span> Write 0.3 as a normalized binary number correctly rounded to 6 bits after the binary point. What is the decimal value of the stored number? Is it larger or smaller than 0.3?</li>
+      <li><span class="pp">[3 pts]</span> Convert \(x=(0.\overline{011})_2=(0.011011011\ldots)_2\) to a fraction.</li>
+      <li><span class="pp">[3 pts]</span> MATLAB's <code>int8</code> type stores integers in 8-bit two's complement. Give the decimal value and bit pattern of <code>intmax('int8')</code> and <code>intmin('int8')</code>, and the bit pattern of \(-37\).</li>
+      <li><span class="pp">[2 pts]</span> An IEEE double has these fields: sign, exponent (11 bits), fraction (52 bits, remaining bits all 0).<br>
+        <span class="bits" aria-label="sign 1, exponent 10000000010, fraction 10101 followed by zeros"><span class="b-s">1</span><span class="b-e">10000000010</span><span class="b-f">1010 1000 0000 … 0000</span></span><br>What number is it?</li>
+    </ol>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <div class="part">
+          <p><span class="pl">(a)</span> Multiply the fraction by 2 and record the integer parts: \(0.3\to0.6\) (0), \(1.2\) (1), \(0.4\) (0), \(0.8\) (0), \(1.6\) (1), \(1.2\) (1), and then 0.4 comes back, so the block 1001 repeats:</p>
+          \[0.3=(0.0\overline{1001})_2=(0.0100110011\ldots)_2=(1.001100\,|\,110011\ldots)_2\times2^{-2}.\]
+          <p>The first discarded bit is 1 and the bits after it are not all 0, so the tail is more than half a unit in the last place. Round up:</p>
+          \[\mathrm{fl}(0.3)=(1.001101)_2\times2^{-2}=\frac{1+\frac18+\frac1{16}+\frac1{64}}{4}=\frac{1.203125}{4}=0.30078125.\]
+          <p><span class="ans">\((1.001101)_2\times2^{-2}=0.30078125\)</span>, which is <b>larger</b> than 0.3 (relative error 0.26%, below \(u=2^{-7}\approx0.78\%\)).</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(b)</span> Multiply by \(2^3=8\) to shift one full period left of the point: \(8x=(11.\overline{011})_2=3+x\). The repeating tails cancel, so \(7x=3\) and <span class="ans">\(x=\tfrac37\)</span>. Check: doubling \(\tfrac37\) gives bits 0, 1, 1 and then \(\tfrac37\) again.</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(c)</span> The leading bit has weight \(-2^7=-128\) and the others are positive.</p>
+          <ul>
+            <li><code>intmax</code> \(=\) <code>01111111</code> \(=2^7-1=\) <span class="ans">127</span></li>
+            <li><code>intmin</code> \(=\) <code>10000000</code> \(=\) <span class="ans">−128</span></li>
+            <li>\(-37\): write \(37=\) <code>00100101</code>, flip every bit to get <code>11011010</code>, add 1: <span class="ans"><code>11011011</code></span>. Check: \(-128+64+16+8+2+1=-37\).</li>
+          </ul>
+        </div>
+        <div class="part">
+          <p><span class="pl">(d)</span> Exponent field \(=1024+2=1026\), so \(e=1026-1023=3\). With the hidden bit, the significand is \((1.10101)_2=1+\tfrac12+\tfrac18+\tfrac1{32}=1.65625\). The sign bit is 1, so the value is \(-1.65625\times2^3=\) <span class="ans">\(-13.25\)</span>.</p>
+        </div>
+        <div class="score-row"><label for="s2">Your score for Problem 2</label><input class="score" id="s2" type="number" inputmode="decimal" min="0" max="12" step="0.5" data-max="12"><span>/ 12</span></div>
+      </div>
+    </details>
+  </article>
+
+  <!-- ===================== PROBLEM 3 ===================== -->
+  <article class="problem" id="p3">
+    <div class="p-num">Problem 3</div>
+    <h2>A 10-bit floating-point system</h2>
+    <div class="p-meta"><span class="chip pts">20 pts</span><span class="chip">≈ 12 min</span><span class="chip">Like HW1 #4 and Lectures 4–5</span></div>
+    <p>A float in this system has 10 bits:</p>
+    <div class="layout" aria-label="Bit layout: 1 sign bit, 4 exponent bits, 5 fraction bits">
+      <div><span class="cell b-s">s</span><small>sign, 1 bit</small></div>
+      <div><span class="cell b-e">eeee</span><small>exponent, 4 bits</small></div>
+      <div><span class="cell b-f">fffff</span><small>fraction, t = 5 bits</small></div>
+    </div>
+    <p>It follows the IEEE design from class: a hidden bit for normalized numbers \(\pm(1.f)_2\times2^e\); exponent field <code>0000</code> for zero and the subnormals \(\pm(0.f)_2\times2^{e_{\min}}\); field <code>1111</code> for Inf and NaN; and a bias, so that \(e=\) (stored field) \(-\) bias. Rounding is round to nearest, ties to even.</p>
+    <ol class="parts">
+      <li><span class="pp">[2 pts]</span> What is the bias, and what range of exponents \(e\) do normalized numbers use?</li>
+      <li><span class="pp">[4 pts]</span> Find realmax, realmin and the smallest positive subnormal number, as exact decimals.</li>
+      <li><span class="pp">[2 pts]</span> How many positive normalized numbers are there? How many positive subnormals?</li>
+      <li><span class="pp">[3 pts]</span> What is the unit roundoff \(u\)? What is the distance from 1 to the next larger float? What is the largest gap between two consecutive floats?</li>
+      <li><span class="pp">[3 pts]</span> Find \(\mathrm{fl}(20.75)\) and its relative error. Check the error against \(u\).</li>
+      <li><span class="pp">[6 pts]</span> Let \(x=1\) and \(y=(1.11111)_2\times2^{-1}\). The exact difference is \(x-y=2^{-6}\).
+        <ol class="sub">
+          <li>Compute \(x-y\) on a machine that keeps only 5 bits after the binary point while it shifts \(y\) to line up with \(x\)'s exponent, so bits shifted past the 5th place are lost. Normalize the result. What is its relative error?</li>
+          <li>Repeat with one extra (guard) bit.</li>
+          <li>What does this tell you about the property \(\mathrm{fl}(x-y)=(x-y)(1+\delta)\), \(|\delta|\le u\)?</li>
+        </ol>
+      </li>
+    </ol>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <div class="part">
+          <p><span class="pl">(a)</span> The 4-bit field stores 0 to 15. The extremes 0 and 15 are reserved, so fields 1 to 14 are used, and the bias is \(14/2=7\) (the same as \(2^{4-1}-1\)). So <span class="ans">bias \(=7\) and \(e\in[1-7,\,14-7]=[-6,\,7]\)</span>.</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(b)</span></p>
+          <ul>
+            <li>realmax \(=(1.11111)_2\times2^{7}=(2-2^{-5})\times128=\) <span class="ans">252</span></li>
+            <li>realmin \(=(1.00000)_2\times2^{-6}=\) <span class="ans">\(2^{-6}=0.015625\)</span></li>
+            <li>smallest subnormal \(=(0.00001)_2\times2^{-6}=2^{-5}\cdot2^{-6}=\) <span class="ans">\(2^{-11}=0.00048828125\)</span> (about \(4.9\times10^{-4}\))</li>
+          </ul>
+        </div>
+        <div class="part">
+          <p><span class="pl">(c)</span> Normalized: 14 exponent values times \(2^5=32\) fractions gives <span class="ans">448</span>. Subnormals: field <code>0000</code> with any of the \(2^5-1=\) <span class="ans">31</span> nonzero fractions.</p>
+          <p class="why">Check: with both signs and \(\pm0\), \(2(448+31)+2=960=2^{10}-2\cdot2^{5}\), which is every bit pattern except the 64 with field <code>1111</code>.</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(d)</span> <span class="ans">\(u=2^{-(t+1)}=2^{-6}=0.015625\)</span>. The next float after 1 is \((1.00001)_2=1+2^{-5}\), so the gap is <span class="ans">\(2^{-5}=0.03125\)</span> \((=2u)\). The largest gap is in the top binade \([2^7,2^8)\): <span class="ans">\(2^{-5}\cdot2^{7}=4\)</span>, for example between 248 and 252.</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(e)</span> \(20.75=(10100.11)_2=(1.010011)_2\times2^4\). Keeping 5 bits leaves \((1.01001\,|\,1)_2\): the discarded part is exactly half a unit, a tie. The neighbors are \((1.01001)_2\times2^4=20.5\) and \((1.01010)_2\times2^4=21\). Ties to even picks the one whose last bit is 0: <span class="ans">\(\mathrm{fl}(20.75)=21\)</span>.</p>
+          <p>Relative error \(=0.25/20.75\approx0.0120\le u=0.015625\). ✓</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(f)</span></p>
+          <p><b>(i)</b> Shifting \(y\) to exponent 0 gives \((0.111111)_2\), which needs 6 bits. Keeping 5 leaves \((0.11111)_2\); the last 1 falls off the end.</p>
+          \[\begin{array}{r@{\;}l} & 1.00000\\ - & 0.11111\\ \hline & 0.00001\end{array}\qquad\Rightarrow\quad (1.00000)_2\times2^{-5}=0.03125.\]
+          <p>The exact answer is \(2^{-6}\), so the relative error is \((2^{-5}-2^{-6})/2^{-6}=\) <span class="ans">1, i.e. 100%</span>.</p>
+          <p><b>(ii)</b> With a guard bit: \(1.000000-0.111111=0.000001=2^{-6}\), which normalizes to \((1.00000)_2\times2^{-6}\). <span class="ans">Exact.</span></p>
+          <p><b>(iii)</b> Without extra bits, a subtraction can have relative error far larger than \(u\), so \(\mathrm{fl}(x-y)=(x-y)(1+\delta)\) with \(|\delta|\le u\) fails. With extra bits (IEEE uses 2 guard bits and 1 sticky bit), every operation returns the exact result rounded to \(t\) bits, so the property holds.</p>
+        </div>
+        <div class="score-row"><label for="s3">Your score for Problem 3</label><input class="score" id="s3" type="number" inputmode="decimal" min="0" max="20" step="0.5" data-max="20"><span>/ 20</span></div>
+      </div>
+    </details>
+  </article>
+
+  <!-- ===================== PROBLEM 4 ===================== -->
+  <article class="problem" id="p4">
+    <div class="p-num">Problem 4</div>
+    <h2>Cancellation and the quadratic formula</h2>
+    <div class="p-meta"><span class="chip pts">13 pts</span><span class="chip">≈ 8 min</span><span class="chip">Like HW2 #2 and Lecture 6</span></div>
+    <p>Consider \(x^2+89.3\,x+1=0\), with roots \(x_1\approx-0.0111996\) and \(x_2\approx-89.2888\).</p>
+    <ol class="parts">
+      <li><span class="pp">[4 pts]</span> Use 4-digit decimal arithmetic: round the result of every operation (including \(b^2\), the square root and the division) to 4 significant digits. Compute \(x_1=\dfrac{-b+\sqrt{b^2-4ac}}{2a}\) and its relative error.</li>
+      <li><span class="pp">[4 pts]</span> Rewrite the formula for \(x_1\) to avoid the problem, and recompute \(x_1\) in 4-digit arithmetic. What is the relative error now?</li>
+      <li><span class="pp">[2 pts]</span> Which operation in (a) caused the error? Why doesn't \(x_2\) have the same problem?</li>
+      <li><span class="pp">[3 pts]</span> Lecture 6 also showed a quadratic with huge coefficients. With \(a=2\times10^{200}\), \(b=6\times10^{200}\), \(c=3\times10^{200}\), what does the standard formula return in double precision, and why? How do you fix it? (realmax \(\approx1.8\times10^{308}\).)</li>
+    </ol>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <div class="part">
+          <p><span class="pl">(a)</span></p>
+          <div class="table-wrap">
+            <table class="num">
+              <thead><tr><th class="l">step</th><th>exact</th><th>4 digits</th></tr></thead>
+              <tbody>
+                <tr><td class="l">\(b^2\)</td><td>7974.49</td><td>7974</td></tr>
+                <tr><td class="l">\(b^2-4ac\)</td><td>7970</td><td>7970</td></tr>
+                <tr><td class="l">\(\sqrt{\;\cdot\;}\)</td><td>89.2749…</td><td>89.27</td></tr>
+                <tr><td class="l">\(-b+\sqrt{\;\cdot\;}\)</td><td>−89.30 + 89.27</td><td>−0.03000</td></tr>
+                <tr><td class="l">\(\div\,2a\)</td><td></td><td>−0.01500</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p><span class="ans">\(x_1=-0.01500\)</span>, relative error \(|{-0.01500}+0.0111996|/0.0111996\approx\) <span class="ans">0.34 (34%)</span>.</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(b)</span> Multiply by the conjugate (equivalently, use \(x_1x_2=c/a\)):</p>
+          \[\begin{aligned} x_1&=\frac{-b+\sqrt{b^2-4ac}}{2a}\cdot\frac{-b-\sqrt{b^2-4ac}}{-b-\sqrt{b^2-4ac}}\\ &=\frac{b^2-(b^2-4ac)}{2a\left(-b-\sqrt{b^2-4ac}\right)}=\frac{-2c}{\,b+\sqrt{b^2-4ac}\,}.\end{aligned}\]
+          <p>Now \(b+\sqrt{\;\cdot\;}=89.30+89.27=178.57\to178.6\), and \(x_1=-2/178.6=-0.011198\ldots\to\) <span class="ans">\(-0.01120\)</span>, with relative error about <span class="ans">\(3.5\times10^{-5}\)</span>. That is as good as 4 digits allow.</p>
+          <p class="why">Same answer the Lecture 6 way: \(x_2=(-89.30-89.27)/2=-178.6/2=-89.30\), then \(x_1=c/(a\,x_2)=1/(-89.30)=-0.01120\).</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(c)</span> The subtraction \(-b+\sqrt{b^2-4ac}\). Because \(b^2\gg4ac\), \(\sqrt{b^2-4ac}\approx b\) and the leading digits cancel. The subtraction itself is exact, but the small rounding errors already made in \(b^2\) and in the square root (each under 0.01%) become most of what is left, a 34% relative error. For \(x_2\) (with \(b\gt0\)), \(-b-\sqrt{b^2-4ac}\) adds two numbers of the same sign, so nothing cancels.</p>
+          <p class="why"><b class="tag">Rule from class</b>If \(b\gt0\), compute \(x_2=\frac{-b-\sqrt{D}}{2a}\) first and then \(x_1=\frac{c}{a\,x_2}\). If \(b\lt0\), compute \(x_1=\frac{-b+\sqrt D}{2a}\) first and then \(x_2=\frac{c}{a\,x_1}\).</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(d)</span> \(b^2=3.6\times10^{401}\) and \(4ac=2.4\times10^{401}\) both overflow to Inf, and \(\text{Inf}-\text{Inf}=\text{NaN}\). So <span class="ans">both roots come out NaN</span>, even though the roots themselves are ordinary numbers.</p>
+          <p>Fix, from Lecture 6: divide every coefficient by \(m=\max(|a|,|b|,|c|)=6\times10^{200}\). The roots don't change, and the new coefficients \(a'=\tfrac13,\ b'=1,\ c'=\tfrac12\) are harmless. Then \(2x^2+6x+3=0\) gives \(x=\frac{-3\pm\sqrt3}{2}\), so <span class="ans">\(x_1\approx-0.6340\), \(x_2\approx-2.3660\)</span> (using the cancellation-free formulas).</p>
+        </div>
+        <div class="score-row"><label for="s4">Your score for Problem 4</label><input class="score" id="s4" type="number" inputmode="decimal" min="0" max="13" step="0.5" data-max="13"><span>/ 13</span></div>
+      </div>
+    </details>
+  </article>
+
+  <!-- ===================== PROBLEM 5 ===================== -->
+  <article class="problem" id="p5">
+    <div class="p-num">Problem 5</div>
+    <h2>Bisection and fixed-point iteration</h2>
+    <div class="p-meta"><span class="chip pts">18 pts</span><span class="chip">≈ 11 min</span><span class="chip">Like HW2 #3 and #4, Lectures 6 and 8</span></div>
+    <p><b>Part A.</b> We compute \(\ln 3\) by applying bisection to \(f(x)=e^x-3\) on \([1,2]\). As in class, the approximation after each step is the midpoint of the current interval.</p>
+    <ol class="parts">
+      <li><span class="pp">[2 pts]</span> Verify that bisection is guaranteed to converge to a root in \([1,2]\).</li>
+      <li><span class="pp">[4 pts]</span> Carry out four bisection steps. For each, list the midpoint \(c\), the sign of \(f(c)\) and the new interval. What is your approximation after four steps, and what error bound does bisection guarantee for it?</li>
+      <li><span class="pp">[3 pts]</span> How many steps guarantee \(\ln3\) correct to 6 decimal places, meaning error \(\lt5\times10^{-7}\)? Would the count change for \(\ln5\), using \(f(x)=e^x-5\) on \([1,2]\)? Why?</li>
+    </ol>
+    <p style="margin-top:18px"><b>Part B.</b> The equation \(x^2-6x+5=0\) has roots 1 and 5. Consider \(g_A(x)=\dfrac{x^2+5}{6}\) and \(g_B(x)=\sqrt{6x-5}\).</p>
+    <ol class="parts" style="counter-reset: part 3">
+      <li><span class="pp">[2 pts]</span> Show that both roots are fixed points of \(g_A\) and of \(g_B\).</li>
+      <li><span class="pp">[4 pts]</span> For each \(g\) and each root, decide whether \(x_{k+1}=g(x_k)\) converges when \(x_0\) is close to that root. When it converges, what is the rate?</li>
+      <li><span class="pp">[3 pts]</span> Starting from \(x_0=2\), compute three iterates of \(g_A\), the errors \(|x_k-1|\) and the ratios of successive errors. What value should the ratios approach?</li>
+    </ol>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <div class="part">
+          <p><span class="pl">(a)</span> \(f\) is continuous, \(f(1)=e-3\approx-0.2817\lt0\) and \(f(2)=e^2-3\approx4.389\gt0\). By the Intermediate Value Theorem there is a root in \([1,2]\), and every bisection step keeps an interval where \(f\) changes sign. (Since \(f'(x)=e^x\gt0\), it is the only root.)</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(b)</span></p>
+          <div class="table-wrap">
+            <table class="num">
+              <thead><tr><th>step</th><th>midpoint \(c\)</th><th>\(f(c)=e^c-3\)</th><th class="l">new interval</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>1.5</td><td>+1.4817</td><td class="l">[1, 1.5]</td></tr>
+                <tr><td>2</td><td>1.25</td><td>+0.4903</td><td class="l">[1, 1.25]</td></tr>
+                <tr><td>3</td><td>1.125</td><td>+0.0802</td><td class="l">[1, 1.125]</td></tr>
+                <tr><td>4</td><td>1.0625</td><td>−0.1064</td><td class="l">[1.0625, 1.125]</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Approximation: the midpoint <span class="ans">1.09375</span>. The interval has length \(1/2^4\), so the midpoint is within <span class="ans">\(2^{-5}=0.03125\)</span> of the root. (In fact \(\ln3=1.098612\ldots\), an error of 0.0049.)</p>
+          <p class="why"><b class="tag">Watch out</b>The actual error doesn't always shrink. After step 2 the midpoint 1.125 is off by 0.026; after step 3 the midpoint 1.0625 is off by 0.036. Only the bound halves every step.</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(c)</span> After \(k\) steps the midpoint satisfies \(|c-r|\le\dfrac{b-a}{2^{k+1}}=2^{-(k+1)}\), since the initial midpoint is within 0.5 and each step halves that. Require</p>
+          \[2^{-(k+1)}\lt5\times10^{-7}\iff2^{k+1}\gt2\times10^{6}\iff k+1\gt\log_2(2\times10^6)=1+6\log_210\approx20.93,\]
+          <p>so \(k\gt19.93\) and <span class="ans">\(k=20\) steps</span>. (On a calculator, \(\log_2N=\ln N/\ln2\).)</p>
+          <p>For \(\ln 5\): \(e-5\lt0\lt e^2-5\), so \([1,2]\) still brackets the root, and the count is <span class="ans">still 20</span>. The bound depends only on the starting length and the tolerance, not on \(f\).</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(d)</span> \(g_A(1)=\frac66=1\), \(g_A(5)=\frac{30}6=5\), \(g_B(1)=\sqrt1=1\), \(g_B(5)=\sqrt{25}=5\). Both come from rearranging the equation: \(6x=x^2+5\), and \(x^2=6x-5\) with \(x\ge0\).</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(e)</span> Near \(x_*\), \(e_{k+1}=|g'(s_k)|\,e_k\) with \(s_k\) between \(x_k\) and \(x_*\) (Lecture 8), so the error is multiplied by about \(|g'(x_*)|\) each step.</p>
+          <ul>
+            <li>\(g_A'(x)=x/3\). At 1: \(\tfrac13\lt1\), so <span class="ans">converges to 1, linearly with \(C=\tfrac13\)</span>. At 5: \(\tfrac53\gt1\), so it does not converge to 5; iterates are pushed away (down toward 1, or up to \(\infty\)).</li>
+            <li>\(g_B'(x)=\dfrac{3}{\sqrt{6x-5}}\). At 5: \(\tfrac35\lt1\), so <span class="ans">converges to 5, linearly with \(C=0.6\)</span>. At 1: \(3\gt1\), so it does not converge to 1 (iterates move toward 5, or leave the domain \(x\ge\frac56\)).</li>
+          </ul>
+          <p>Neither converges quadratically, because \(g'(x_*)\ne0\) in every convergent case. Newton's \(g\) would have \(g'(x_*)=0\).</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(f)</span></p>
+          <div class="table-wrap">
+            <table class="num">
+              <thead><tr><th>k</th><th>\(x_k\)</th><th>\(e_k=|x_k-1|\)</th><th>\(e_k/e_{k-1}\)</th></tr></thead>
+              <tbody>
+                <tr><td>0</td><td>2</td><td>1</td><td>–</td></tr>
+                <tr><td>1</td><td>1.5</td><td>0.5</td><td>0.5000</td></tr>
+                <tr><td>2</td><td>1.2083333</td><td>0.2083333</td><td>0.4167</td></tr>
+                <tr><td>3</td><td>1.0766782</td><td>0.0766782</td><td>0.3681</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>The ratios approach <span class="ans">\(|g_A'(1)|=\tfrac13\)</span>; the next two are 0.346 and 0.338.</p>
+        </div>
+        <div class="score-row"><label for="s5">Your score for Problem 5</label><input class="score" id="s5" type="number" inputmode="decimal" min="0" max="18" step="0.5" data-max="18"><span>/ 18</span></div>
+      </div>
+    </details>
+  </article>
+
+  <!-- ===================== PROBLEM 6 ===================== -->
+  <article class="problem" id="p6">
+    <div class="p-num">Problem 6</div>
+    <h2>Newton's method</h2>
+    <div class="p-meta"><span class="chip pts">12 pts</span><span class="chip">≈ 8 min</span><span class="chip">Like HW2 #3 and #5, Lectures 7–8</span></div>
+    <ol class="parts">
+      <li><span class="pp">[3 pts]</span> Derive Newton's method from the Taylor series of \(f\) about \(x_k\) with the remainder term, as in Lecture 7.</li>
+      <li><span class="pp">[5 pts]</span> Write Newton's iteration for \(A^{1/3}\), the root of \(f(x)=x^3-A\). With \(A=2\) and \(x_0=1\), compute \(x_1\), \(x_2\), \(x_3\). Bisection on \([1,2]\) needs 24 steps to get \(2^{1/3}\) to 7 decimal places. Roughly how many Newton steps does it take? (\(2^{1/3}=1.259921049\ldots\))</li>
+      <li><span class="pp">[4 pts]</span> Write Newton's method as a fixed-point iteration \(x_{k+1}=g(x_k)\). Show that \(g'(x_*)=0\) at a root with \(f'(x_*)\ne0\), and use a Taylor expansion of \(g\) about \(x_*\) to show that \(e_{k+1}\le C\,e_k^2\).</li>
+    </ol>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <div class="part">
+          <p><span class="pl">(a)</span> Taylor's theorem about the reference point \(x_k\), evaluated at the root \(x_*\):</p>
+          \[0=f(x_*)=f(x_k)+(x_*-x_k)\,f'(x_k)+\frac{(x_*-x_k)^2}{2}\,f''(s),\qquad s\text{ between }x_k\text{ and }x_*.\]
+          <p>We can't solve this for \(x_*\) because \(s\) is unknown. Drop the remainder and call the solution \(x_{k+1}\):</p>
+          \[0=f(x_k)+(x_{k+1}-x_k)\,f'(x_k)\;\Longrightarrow\;x_{k+1}=x_k-\frac{f(x_k)}{f'(x_k)},\quad f'(x_k)\ne0.\]
+          <p>Geometrically, \(x_{k+1}\) is where the tangent line at \((x_k,f(x_k))\) crosses the \(x\)-axis.</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(b)</span> \(f'(x)=3x^2\), so <span class="ans">\(x_{k+1}=x_k-\dfrac{x_k^3-A}{3x_k^2}=\dfrac{2x_k^3+A}{3x_k^2}\)</span>.</p>
+          <div class="table-wrap">
+            <table class="num">
+              <thead><tr><th>k</th><th>\(x_k\)</th><th>\(e_k\)</th><th>\(e_k/e_{k-1}^2\)</th></tr></thead>
+              <tbody>
+                <tr><td>0</td><td>1</td><td>2.60e−1</td><td>–</td></tr>
+                <tr><td>1</td><td>4/3 = 1.3333333</td><td>7.34e−2</td><td>1.087</td></tr>
+                <tr><td>2</td><td>91/72 = 1.2638889</td><td>3.97e−3</td><td>0.736</td></tr>
+                <tr><td>3</td><td>1.2599335</td><td>1.24e−5</td><td>0.790</td></tr>
+                <tr><td>4</td><td>1.2599210500</td><td>1.23e−10</td><td>0.794</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>The number of correct digits roughly doubles each step: \(x_3\) has 4 correct decimals and \(x_4\) has 9. So <span class="ans">about 4 Newton steps</span> do the work of 24 bisection steps.</p>
+          <p class="why">The ratio \(e_k/e_{k-1}^2\) settles at \(\left|\dfrac{f''(x_*)}{2f'(x_*)}\right|=\dfrac{6x_*}{6x_*^2}=\dfrac1{x_*}\approx0.794\), the signature of quadratic convergence.</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(c)</span> \(g(x)=x-\dfrac{f(x)}{f'(x)}\). By the quotient rule,</p>
+          \[g'(x)=1-\frac{f'(x)^2-f(x)\,f''(x)}{f'(x)^2}=\frac{f(x)\,f''(x)}{f'(x)^2},\qquad g'(x_*)=\frac{0\cdot f''(x_*)}{f'(x_*)^2}=0.\]
+          <p>Expand \(g(x_k)\) about \(x_*\), using \(g(x_k)=x_{k+1}\), \(g(x_*)=x_*\) and \(g'(x_*)=0\):</p>
+          \[x_{k+1}-x_*=g(x_k)-g(x_*)=\underbrace{g'(x_*)}_{0}(x_k-x_*)+\frac{g''(s)}{2}(x_k-x_*)^2.\]
+          <p>Taking absolute values, <span class="ans">\(e_{k+1}=\dfrac{|g''(s)|}{2}\,e_k^2\le C\,e_k^2\)</span> with \(C=\tfrac12\max|g''|\) on an interval around \(x_*\). This holds once \(x_0\) is in an interval around \(x_*\) where \(|g'|\lt1\), so the iterates stay close to the root.</p>
+        </div>
+        <div class="score-row"><label for="s6">Your score for Problem 6</label><input class="score" id="s6" type="number" inputmode="decimal" min="0" max="12" step="0.5" data-max="12"><span>/ 12</span></div>
+      </div>
+    </details>
+  </article>
+
+  <!-- ===================== PROBLEM 7 ===================== -->
+  <article class="problem" id="p7">
+    <div class="p-num">Problem 7</div>
+    <h2>Secant method and convergence rates</h2>
+    <div class="p-meta"><span class="chip pts">10 pts</span><span class="chip">≈ 6 min</span><span class="chip">Like Lecture 9</span></div>
+    <ol class="parts">
+      <li><span class="pp">[4 pts]</span> Apply two steps of the secant method to \(f(x)=x^2-3\) with \(x_0=1\), \(x_1=2\). Compare \(x_3\) with \(\sqrt3=1.7320508\).</li>
+      <li><span class="pp">[4 pts]</span> Three methods produced these errors \(e_k=|x_k-x_*|\). For each, say whether the convergence is linear, superlinear or quadratic, and estimate the order (or \(C\) if it is linear). Which method from class could have produced each?
+        <div class="table-wrap">
+          <table class="num">
+            <thead><tr><th>method</th><th>\(e_0\)</th><th>\(e_1\)</th><th>\(e_2\)</th><th>\(e_3\)</th><th>\(e_4\)</th><th>\(e_5\)</th></tr></thead>
+            <tbody>
+              <tr><td>P</td><td>0.4</td><td>0.28</td><td>0.196</td><td>0.1372</td><td>0.09604</td><td>0.06723</td></tr>
+              <tr><td>Q</td><td>\(10^{-1}\)</td><td>\(10^{-2}\)</td><td>\(10^{-4}\)</td><td>\(10^{-8}\)</td><td>\(10^{-16}\)</td><td>–</td></tr>
+              <tr><td>R</td><td>\(10^{-1}\)</td><td>\(10^{-2}\)</td><td>\(10^{-3}\)</td><td>\(10^{-5}\)</td><td>\(10^{-8}\)</td><td>\(10^{-13}\)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </li>
+      <li><span class="pp">[2 pts]</span> The secant method has lower order than Newton's method. Give two reasons someone might still prefer it.</li>
+    </ol>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <div class="part">
+          <p><span class="pl">(a)</span> \(f(1)=-2\), \(f(2)=1\).</p>
+          \[x_2=x_1-\frac{f(x_1)(x_1-x_0)}{f(x_1)-f(x_0)}=2-\frac{(1)(1)}{1-(-2)}=\frac53\approx1.6666667\]
+          <p>\(f(x_2)=\frac{25}9-3=-\frac29\approx-0.2222222\), so</p>
+          \[x_3=\frac53-\frac{\left(-\frac29\right)\left(-\frac13\right)}{-\frac29-1}=\frac53+\frac2{33}=\frac{19}{11}\approx1.7272727.\]
+          <p><span class="ans">\(x_2=\tfrac53\approx1.6666667\), \(x_3=\tfrac{19}{11}\approx1.7272727\)</span>, so \(|x_3-\sqrt3|\approx0.0048\). The errors are \(0.268,\ 0.065,\ 0.0048\), and the next step gives \(x_4=\tfrac{97}{56}\approx1.7321429\) with error \(9.2\times10^{-5}\).</p>
+          <p class="why">This matches \(e_{k+1}\approx C\,e_k\,e_{k-1}\) with \(C=\left|\frac{f''}{2f'}\right|=\frac1{2\sqrt3}\approx0.289\): \(0.289\times0.065\times0.268\approx0.0051\). For \(f=x^2-a\), the secant step simplifies to \(x_{k+1}=\frac{x_kx_{k-1}+a}{x_k+x_{k-1}}\).</p>
+        </div>
+        <div class="part">
+          <p><span class="pl">(b)</span> Estimate the order with \(r\approx\dfrac{\log(e_{k+1}/e_k)}{\log(e_k/e_{k-1})}\).</p>
+          <ul>
+            <li><b>P:</b> \(e_{k+1}/e_k=0.7\) every step, so <span class="ans">linear, \(C=0.7\)</span>. For example, fixed-point iteration with \(|g'(x_*)|=0.7\).</li>
+            <li><b>Q:</b> the exponents 1, 2, 4, 8, 16 double, so \(e_{k+1}=e_k^2\): <span class="ans">quadratic, order 2</span>. Newton at a simple root.</li>
+            <li><b>R:</b> the exponents 1, 2, 3, 5, 8, 13 are Fibonacci numbers, so \(e_{k+1}=e_k\,e_{k-1}\). The exponent ratios 1.5, 1.67, 1.6, 1.625 approach <span class="ans">\(\frac{1+\sqrt5}2\approx1.618\), superlinear</span>. The secant method.</li>
+          </ul>
+        </div>
+        <div class="part">
+          <p><span class="pl">(c)</span> Any two of these:</p>
+          <ul>
+            <li>It needs no derivative, which may be unavailable or expensive.</li>
+            <li>It needs only one new function value per step, while Newton needs \(f\) and \(f'\). If \(f'\) costs as much as \(f\), two secant steps cost the same as one Newton step and raise the error to the power \(1.618^2\approx2.618\gt2\), so secant is often faster per unit of work.</li>
+          </ul>
+          <p class="why">Both methods are local. Secant needs two starting guesses.</p>
+        </div>
+        <div class="score-row"><label for="s7">Your score for Problem 7</label><input class="score" id="s7" type="number" inputmode="decimal" min="0" max="10" step="0.5" data-max="10"><span>/ 10</span></div>
+      </div>
+    </details>
+  </article>
+
+  <!-- ===================== EXTRA PRACTICE ===================== -->
+  <section class="section-head" id="extra">
+    <div class="eyebrow">Untimed</div>
+    <h2>Extra practice</h2>
+    <p>Nine more problems in the style of the homework and lectures, for after you grade the exam. They cover the proofs and details the timed exam had no room for.</p>
+  </section>
+
+  <article class="problem" id="x1">
+    <div class="p-num">Extra 1</div>
+    <h2>An iteration that runs away</h2>
+    <div class="p-meta"><span class="chip">Like HW2 #1, with Lecture 8's fixed-point theory</span></div>
+    <p>In exact arithmetic, \(x=\tfrac13\) is a fixed point of \(x\leftarrow4x-1\), since \(\tfrac43-1=\tfrac13\). Store \(x_0=\tfrac13\) with \(t=4\) bits after the binary point (normalized, round to nearest), then apply \(x\leftarrow4x-1\) repeatedly in the same 4-bit arithmetic. What happens, and why?</p>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <p>\(\tfrac13=(0.010101\ldots)_2=(1.0101\,|\,0101\ldots)_2\times2^{-2}\). The first discarded bit is 0, so round down: \(x_0=(1.0101)_2\times2^{-2}=0.328125\).</p>
+        <p>Multiplying by 4 only changes the exponent: \(4x_0=(1.0101)_2=1.3125\). Subtracting 1 leaves \((0.0101)_2=(1.0100)_2\times2^{-2}=0.3125\); normalizing shifts left and pads a 0 that carries no information about \(\tfrac13\).</p>
+        <div class="table-wrap">
+          <table class="num">
+            <thead><tr><th>k</th><th>\(x_k\)</th><th>error \(x_k-\tfrac13\)</th></tr></thead>
+            <tbody>
+              <tr><td>0</td><td>0.328125</td><td>−0.0052</td></tr>
+              <tr><td>1</td><td>0.3125</td><td>−0.0208</td></tr>
+              <tr><td>2</td><td>0.25</td><td>−0.0833</td></tr>
+              <tr><td>3</td><td>0</td><td>−0.3333</td></tr>
+              <tr><td>4</td><td>−1</td><td>−1.3333</td></tr>
+              <tr><td>5</td><td>−5</td><td>−5.3333</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The error is multiplied by exactly 4 each step, and the iterates run off to \(-\infty\). As a fixed-point iteration, \(g(x)=4x-1\) has \(g'(x)=4\), so <span class="ans">\(|g'(x_*)|\gt1\) and the fixed point repels</span>. The arithmetic in these steps is exact; all the damage comes from the tiny initial rounding of \(\tfrac13\).</p>
+      </div>
+    </details>
+  </article>
+
+  <article class="problem" id="x2">
+    <div class="p-num">Extra 2</div>
+    <h2>Why the sticky bit matters</h2>
+    <div class="p-meta"><span class="chip">Like Lecture 5</span></div>
+    <p>Use \(t=3\) fraction bits and round to nearest, ties to even. Compute \(1+(1.001)_2\times2^{-4}\):</p>
+    <ol class="sub">
+      <li>exactly, then rounded to 3 bits;</li>
+      <li>with 2 guard bits but no sticky bit;</li>
+      <li>with 2 guard bits and a sticky bit.</li>
+    </ol>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <p>\(y=(1.001)_2\times2^{-4}=(0.0001001)_2=0.0703125\).</p>
+        <p><b>(i)</b> Exact sum \((1.0001001)_2=1.0703125\). Rounded to 3 bits: \((1.000\,|\,1001)_2\). The tail is more than half, so round up to <span class="ans">\((1.001)_2=1.125\)</span>.</p>
+        <p><b>(ii)</b> Aligning \(y\) keeps \(3+2=5\) bits, \((0.00010)_2\); the final 1 is lost. The sum \((1.00010)_2\) looks like an exact tie between 1.000 and 1.001, and ties to even gives <span class="ans">1.000, the wrong answer</span>.</p>
+        <p><b>(iii)</b> The sticky bit records that a nonzero bit was shifted off, so \((1.00010)_2\) with sticky 1 means "slightly more than half". Round up: <span class="ans">1.125, correct</span>.</p>
+        <p class="why">IEEE requires every result to equal the exact result correctly rounded. Guard bits alone can't tell an exact tie from "just above a tie"; the sticky bit can.</p>
+      </div>
+    </details>
+  </article>
+
+  <article class="problem" id="x3">
+    <div class="p-num">Extra 3</div>
+    <h2>Newton without division</h2>
+    <div class="p-meta"><span class="chip">Like HW2 #5</span></div>
+    <p>Derive Newton's iteration for \(1/\sqrt R\) from \(f(x)=\dfrac1{x^2}-R\), and simplify so the only division is by 2 (an exponent shift). With \(R=2\) and \(x_0=0.7\), compute \(x_1\) and \(x_2\). Then show that \(r_k=1-Rx_k^2\) satisfies \(r_{k+1}=\tfrac14r_k^2(3+r_k)\), and explain what that says about the convergence.</p>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <p>\(f'(x)=-2/x^3\), so</p>
+        \[x_{k+1}=x_k-\frac{x_k^{-2}-R}{-2x_k^{-3}}=x_k+\frac{x_k-Rx_k^3}{2}=\frac{x_k\,(3-Rx_k^2)}{2}.\]
+        <p>With \(R=2\): <span class="ans">\(x_1=0.7(3-0.98)/2=0.707\)</span> and <span class="ans">\(x_2=0.707(3-0.999698)/2=0.70710676\)</span>. The true value is \(1/\sqrt2=0.70710678\).</p>
+        <p>Let \(s=Rx_k^2=1-r_k\). Then \(Rx_{k+1}^2=\tfrac14s(3-s)^2=\tfrac14(1-r_k)(2+r_k)^2=1-\tfrac34r_k^2-\tfrac14r_k^3\), so</p>
+        \[r_{k+1}=\frac{r_k^2\,(3+r_k)}{4}\approx\tfrac34\,r_k^2.\]
+        <p>The relative error is squared (times about \(\tfrac34\)) each step: <span class="ans">quadratic convergence</span>. Here \(r_0=0.02\), \(r_1=3.0\times10^{-4}\), \(r_2=6.8\times10^{-8}\).</p>
+        <p class="why">To keep \(x_1\gt0\) you need \(Rx_0^2\lt3\), that is \(0\lt x_0\lt\sqrt{3/R}\).</p>
+      </div>
+    </details>
+  </article>
+
+  <article class="problem" id="x4">
+    <div class="p-num">Extra 4</div>
+    <h2>How good is the fixed-point bound?</h2>
+    <div class="p-meta"><span class="chip">Like Lecture 8</span></div>
+    <p>For \(g_A(x)=\dfrac{x^2+5}{6}\) on \([0,2]\): show that \(g_A\) maps \([0,2]\) into itself and that \(|g_A'(x)|\le\tfrac23\) there. Use \(e_k\le\rho^k e_0\) to find how many iterations guarantee \(|x_k-1|\le10^{-6}\) from any \(x_0\in[0,2]\). Compare with how many it actually takes.</p>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <p>\(g_A'(x)=x/3\ge0\), so \(g_A\) is increasing and \(g_A([0,2])=[g_A(0),g_A(2)]=[\tfrac56,\tfrac32]\subset[0,2]\). On \([0,2]\), \(|g_A'(x)|=x/3\le\tfrac23=\rho\).</p>
+        <p>From Lecture 8, \(e_{k+1}=|g'(s_k)|\,e_k\le\rho\,e_k\), so \(e_k\le\rho^k e_0\le(\tfrac23)^k\cdot1\), since every \(x_0\in[0,2]\) is within 1 of the fixed point 1.</p>
+        \[\left(\tfrac23\right)^k\le10^{-6}\iff k\ge\frac{6}{\log_{10}1.5}\approx34.07,\]
+        <p>so <span class="ans">35 iterations are guaranteed to suffice</span>. In practice it takes <span class="ans">12 from \(x_0=0\) and 14 from \(x_0=2\)</span>, because near the root the error shrinks by \(|g_A'(1)|=\tfrac13\) per step, not \(\tfrac23\). The bound uses the worst slope on the whole interval.</p>
+      </div>
+    </details>
+  </article>
+
+  <article class="problem" id="x5">
+    <div class="p-num">Extra 5</div>
+    <h2>Where 1.618 comes from</h2>
+    <div class="p-meta"><span class="chip">Like Lecture 9</span></div>
+    <p>Suppose the secant errors satisfy \(e_{k+1}\approx C\,e_k\,e_{k-1}\), and that \(e_{k+1}\approx A\,e_k^{\alpha}\) for constants \(A\) and \(\alpha\). Find \(\alpha\).</p>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <p>From \(e_k\approx A\,e_{k-1}^{\alpha}\), \(e_{k-1}\approx(e_k/A)^{1/\alpha}\). Substitute into \(A\,e_k^\alpha\approx C\,e_k\,e_{k-1}\):</p>
+        \[A\,e_k^{\alpha}\approx C\,e_k\left(\frac{e_k}{A}\right)^{1/\alpha}\;\Longrightarrow\;\frac{A^{1+1/\alpha}}{C}\approx e_k^{\,1+1/\alpha-\alpha}.\]
+        <p>The left side doesn't depend on \(k\), but \(e_k\to0\), so the exponent must be 0:</p>
+        \[1+\frac1\alpha-\alpha=0\iff\alpha^2-\alpha-1=0\iff\alpha=\frac{1\pm\sqrt5}{2}.\]
+        <p>Take the positive root so the error decreases: <span class="ans">\(\alpha=\frac{1+\sqrt5}2\approx1.618\)</span>.</p>
+      </div>
+    </details>
+  </article>
+
+  <article class="problem" id="x6">
+    <div class="p-num">Extra 6</div>
+    <h2>When Newton fails</h2>
+    <div class="p-meta"><span class="chip">Like Lecture 7</span></div>
+    <ol class="sub">
+      <li>Apply Newton's method to \(f(x)=x^3-2x+2\) from \(x_0=0\).</li>
+      <li>Apply Newton's method to \(f(x)=\arctan x\) from \(x_0=1\), and again from \(x_0=2\). Explain the difference.</li>
+    </ol>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <p><b>(i)</b> \(f'(x)=3x^2-2\). \(x_1=0-\frac{2}{-2}=1\), then \(x_2=1-\frac{1-2+2}{3-2}=0\). <span class="ans">The iterates cycle 0, 1, 0, 1, … forever.</span> From \(x_0=-2\) it converges to the real root: \(-1.8,\ -1.76995,\ -1.76929,\ldots\to-1.7692924\).</p>
+        <p><b>(ii)</b> \(x_{k+1}=x_k-(1+x_k^2)\arctan x_k\) (radians).</p>
+        <ul>
+          <li>From \(x_0=1\): \(-0.5708,\ 0.1169,\ -0.0011,\ 0.0000\). <span class="ans">Converges to 0</span>, fast.</li>
+          <li>From \(x_0=2\): \(-3.5357,\ 13.951,\ -279.34,\ldots\) <span class="ans">Diverges.</span> The graph of \(\arctan\) is so flat out there that each tangent line overshoots farther.</li>
+        </ul>
+        <p class="why">The dividing line is \(x_0\approx1.3917\), where the iterates bounce between \(\pm x_0\). Newton is a local method; it also breaks down when \(f'(x_k)\approx0\), because the step becomes huge or undefined. Safeguarded methods like <code>fzero</code> keep a bracket to avoid this.</p>
+      </div>
+    </details>
+  </article>
+
+  <article class="problem" id="x7">
+    <div class="p-num">Extra 7</div>
+    <h2>IEEE double facts</h2>
+    <div class="p-meta"><span class="chip">Like the Lecture 1, 2 and 4 MATLAB demos</span></div>
+    <p>Answer without MATLAB.</p>
+    <ol class="sub">
+      <li>What are realmax, realmin and the smallest subnormal?</li>
+      <li>Why is <code>realmax + 1 == realmax</code> true, while <code>realmax + 2^970</code> is <code>Inf</code>?</li>
+      <li>What is <code>2^-1075</code>?</li>
+      <li>Lecture 1 compared <code>1 + (3e-16 + 3e-16)</code> with <code>(1 + 3e-16) + 3e-16</code>. Which is larger, and what are the two values?</li>
+    </ol>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <p><b>(i)</b> realmax \(=(2-2^{-52})\times2^{1023}\approx1.8\times10^{308}\); realmin \(=2^{-1022}\approx2.2\times10^{-308}\); smallest subnormal \(=2^{-52}\times2^{-1022}=2^{-1074}\approx4.9\times10^{-324}\).</p>
+        <p><b>(ii)</b> The gap just below realmax is \(2^{-52}\times2^{1023}=2^{971}\). Adding 1, far less than half the gap, rounds back to realmax. But realmax \(+\,2^{970}\) is exactly halfway between realmax and \(2^{1024}\). Realmax's last fraction bit is 1 (odd), so ties to even rounds up to \(2^{1024}\), which overflows to <span class="ans">Inf</span>.</p>
+        <p><b>(iii)</b> \(2^{-1075}\) is exactly half the smallest subnormal, a tie between 0 and \(2^{-1074}\). Ties to even gives <span class="ans">0</span> (underflow).</p>
+        <p><b>(iv)</b> Near 1, doubles are spaced \(2^{-52}\approx2.22\times10^{-16}\). \(1+3\times10^{-16}\) rounds to \(1+2^{-52}\); adding \(3\times10^{-16}\) again lands at \(1+5.2\times10^{-16}\), which rounds to \(1+2\cdot2^{-52}=1.0000000000000004\). The other order adds \(3\times10^{-16}+3\times10^{-16}=6\times10^{-16}\) first, and \(1+6\times10^{-16}\) rounds to \(1+3\cdot2^{-52}=\) <span class="ans">1.0000000000000007, the larger one</span> (and closer to the exact sum).</p>
+      </div>
+    </details>
+  </article>
+
+  <article class="problem" id="x8">
+    <div class="p-num">Extra 8</div>
+    <h2>Deriving the unit roundoff bound</h2>
+    <div class="p-meta"><span class="chip">Like Lecture 5</span></div>
+    <p>Let \(x=(1.b_1b_2\ldots b_tb_{t+1}\ldots)_2\times2^e\), and let \(\mathrm{fl}(x)\) be \(x\) rounded to nearest with \(t\) bits after the binary point. Show that \(\dfrac{|\mathrm{fl}(x)-x|}{|x|}\le2^{-(t+1)}\).</p>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <p>\(x\) lies between two consecutive floats, \(x_1=(1.b_1\ldots b_t)_2\times2^e\) and \(x_2=x_1+2^{-t}\times2^e\). Round to nearest picks the closer one, so the error is at most half the gap:</p>
+        \[|\mathrm{fl}(x)-x|\le\tfrac12\cdot2^{-t}\cdot2^{e}=2^{-(t+1)}\,2^{e}.\]
+        <p>Divide by \(|x|=(1.b_1b_2\ldots)_2\times2^e\ge2^e\):</p>
+        \[\frac{|\mathrm{fl}(x)-x|}{|x|}\le\frac{2^{-(t+1)}\,2^{e}}{2^{e}}=2^{-(t+1)}=u.\]
+        <p>Equivalently <span class="ans">\(\mathrm{fl}(x)=x(1+\delta)\) with \(|\delta|\le u\)</span>. For double precision, \(t=52\) gives \(u=2^{-53}\approx1.1\times10^{-16}\). The argument needs \(x\) in the normalized range; subnormals break it, as Problem 1(a) showed.</p>
+      </div>
+    </details>
+  </article>
+
+  <article class="problem" id="x9">
+    <div class="p-num">Extra 9</div>
+    <h2>Taylor series with remainder</h2>
+    <div class="p-meta"><span class="chip">Like pop quiz 3 and Lecture 7</span></div>
+    <p>Write the degree-2 Taylor polynomial of \(f(x)=\sqrt x\) about \(x_0=4\), with the remainder term. Use it to approximate \(\sqrt{4.1}\) and bound the error.</p>
+    <details class="sol">
+      <summary><span class="when-closed">Show solution</span><span class="when-open">Hide solution</span></summary>
+      <div class="sol-body">
+        <p>\(f(4)=2\); \(f'(x)=\frac1{2\sqrt x}\to\frac14\); \(f''(x)=-\frac1{4x^{3/2}}\to-\frac1{32}\); \(f'''(x)=\frac3{8x^{5/2}}\). With \(h=x-4\):</p>
+        \[\sqrt{4+h}=2+\frac h4-\frac{h^2}{64}+\frac{h^3}{6}\cdot\frac{3}{8\,s^{5/2}},\qquad s\in[4,\,4+h].\]
+        <p>With \(h=0.1\): \(2+0.025-0.00015625=\) <span class="ans">2.02484375</span>. Since \(f'''\) is largest at \(s=4\), the error is at most \(\frac{0.1^3}{6}\cdot\frac{3}{8\cdot32}\approx\) <span class="ans">\(1.95\times10^{-6}\)</span>. (Actual: \(\sqrt{4.1}=2.0248457\), error \(1.92\times10^{-6}\).)</p>
+      </div>
+    </details>
+  </article>
+
+  <!-- ===================== NOTE SHEET ===================== -->
+  <section class="section-head" id="notes">
+    <div class="eyebrow">For your legal-size page</div>
+    <h2>Note-sheet checklist</h2>
+    <p>If you can derive these, you only need a line for each. If you can't, that's the part to study.</p>
+  </section>
+  <div class="notes-grid">
+    <div>
+      <h3>Floating point</h3>
+      <ul>
+        <li>Normalized float \(\pm(1.b_1\ldots b_t)_2\times2^e\), hidden bit, \(t\) bits after the point.</li>
+        <li>\(k\) exponent bits: field 0 = zero and subnormals \((0.f)_2\times2^{e_{\min}}\); field \(2^k-1\) = Inf/NaN; bias \(=2^{k-1}-1\); \(e\in[1-\text{bias},\ 2^k-2-\text{bias}]\).</li>
+        <li>realmax \(=(2-2^{-t})\,2^{e_{\max}}\); realmin \(=2^{e_{\min}}\); smallest subnormal \(=2^{-t}\,2^{e_{\min}}\).</li>
+        <li>Gap in \([2^e,2^{e+1})\) is \(2^{e-t}\); gap after 1 is \(2^{-t}\); \(u=2^{-(t+1)}\).</li>
+        <li>\(\mathrm{fl}(x)=x(1+\delta)\), \(|\delta|\le u\), in the normalized range. \(\mathrm{fl}(x\text{ op }y)=(x\text{ op }y)(1+\delta)\) needs 2 guard bits and a sticky bit.</li>
+        <li>Round to nearest; on a tie, keep the neighbor whose last bit is 0.</li>
+        <li>Double: 1 | 11 | 52 bits, bias 1023, \(e\in[-1022,1023]\), realmax \(\approx1.8\times10^{308}\), realmin \(\approx2.2\times10^{-308}\), \(2^{-1074}\approx4.9\times10^{-324}\), \(u=2^{-53}\approx1.1\times10^{-16}\).</li>
+        <li>\(n\)-bit two's complement: \([-2^{n-1},\,2^{n-1}-1]\); negate by flipping bits and adding 1.</li>
+        <li>Conversions: integers divide by 2 (read remainders last to first); fractions multiply by 2 (read integer parts first to last); for \((0.\overline{b_1\ldots b_p})_2\), multiply by \(2^p\) and subtract.</li>
+        <li>Cancellation: the subtraction is exact but exposes earlier errors. Quadratic: \(b\gt0\Rightarrow x_2=\frac{-b-\sqrt D}{2a}\), \(x_1=\frac{c}{a x_2}\). Scale by \(\max(|a|,|b|,|c|)\) to avoid overflow.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Nonlinear equations</h3>
+      <ul>
+        <li>Bisection: needs continuity and a sign change. After \(k\) steps \(|c-r|\le\frac{b-a}{2^{k+1}}\). \(p\) decimals means error \(\lt5\times10^{-(p+1)}\). Linear, and independent of \(f\).</li>
+        <li>Taylor: \(f(b)=f(a)+(b-a)f'(a)+\frac{(b-a)^2}{2}f''(s)\).</li>
+        <li>Newton: \(x_{k+1}=x_k-\frac{f(x_k)}{f'(x_k)}\). Quadratic if \(f'(x_*)\ne0\) and \(x_0\) is close: \(e_{k+1}\approx\left|\frac{f''(x_*)}{2f'(x_*)}\right|e_k^2\). Multiplicity \(m\): linear, \(C=1-\frac1m\).</li>
+        <li>Newton's iteration function: \(g'(x)=\frac{f(x)f''(x)}{f'(x)^2}\), so \(g'(x_*)=0\).</li>
+        <li>Fixed point \(x_{k+1}=g(x_k)\): converges near \(x_*\) if \(|g'(x_*)|\lt1\); \(e_{k+1}\approx|g'(x_*)|\,e_k\) (linear); quadratic if \(g'(x_*)=0\). On \([a,b]\): \(e_k\le\rho^ke_0\), \(\rho=\max|g'|\).</li>
+        <li>Secant: \(x_{k+1}=x_k-\frac{f(x_k)(x_k-x_{k-1})}{f(x_k)-f(x_{k-1})}\); \(e_{k+1}\approx C\,e_ke_{k-1}\); order \(\frac{1+\sqrt5}2\approx1.618\).</li>
+        <li>Order from data: \(r\approx\frac{\log(e_{k+1}/e_k)}{\log(e_k/e_{k-1})}\).</li>
+        <li>Global: bisection. Local: Newton, secant. <code>fzero</code> = bisection + secant + inverse quadratic interpolation.</li>
+        <li>Calculator: \(\log_2N=\ln N/\ln2\); set radians for trig.</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <p>Unofficial practice exam for self-study, written from your CS 314 Lecture 1–9 notes and Homeworks 1–2. Every numerical answer was checked in Python.</p>
+  </footer>
+
+</main>
+</div>
+
+<script>
+(function () {
+  /* ---- Timer ---- */
+  var DURATION = 60 * 60;
+  var clock = document.getElementById('clock');
+  var startBtn = document.getElementById('t-start');
+  var resetBtn = document.getElementById('t-reset');
+  var timerBox = document.getElementById('timer');
+  var bar = document.getElementById('bar');
+  var prog = document.getElementById('prog');
+  var running = false, before = 0, startedAt = 0, tick = null;
+
+  function elapsed() { return before + (running ? (Date.now() - startedAt) / 1000 : 0); }
+  function fmt(sec) {
+    sec = Math.max(0, Math.floor(sec));
+    var m = Math.floor(sec / 60), s = sec % 60;
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+  function render() {
+    var e = elapsed(), left = DURATION - e;
+    if (left > 0) {
+      clock.textContent = fmt(Math.ceil(left));
+      timerBox.classList.remove('over'); bar.classList.remove('over');
+    } else {
+      clock.textContent = '+' + fmt(-left);
+      timerBox.classList.add('over'); bar.classList.add('over');
+    }
+    prog.style.width = Math.min(100, (e / DURATION) * 100) + '%';
+  }
+  startBtn.addEventListener('click', function () {
+    if (running) {
+      before = elapsed(); running = false; clearInterval(tick);
+      startBtn.textContent = 'Resume';
+    } else {
+      startedAt = Date.now(); running = true;
+      tick = setInterval(render, 250);
+      startBtn.textContent = 'Pause';
+    }
+    startBtn.setAttribute('aria-pressed', String(running));
+    render();
+  });
+  resetBtn.addEventListener('click', function () {
+    running = false; clearInterval(tick); before = 0;
+    startBtn.textContent = 'Start'; startBtn.setAttribute('aria-pressed', 'false');
+    render();
+  });
+  render();
+
+  /* ---- Reveal all solutions ---- */
+  var sols = Array.prototype.slice.call(document.querySelectorAll('details.sol'));
+  var revealBtn = document.getElementById('reveal');
+  function allOpen() { return sols.every(function (d) { return d.open; }); }
+  function syncReveal() {
+    var open = allOpen();
+    revealBtn.textContent = open ? 'Hide all solutions' : 'Show all solutions';
+    revealBtn.setAttribute('aria-pressed', String(open));
+  }
+  revealBtn.addEventListener('click', function () {
+    var open = allOpen();
+    sols.forEach(function (d) { d.open = !open; });
+    syncReveal();
+  });
+  sols.forEach(function (d) { d.addEventListener('toggle', syncReveal); });
+
+  /* ---- Self-scoring (saved in this browser only) ---- */
+  var KEY = 'cs314-pm1-scores-v1';
+  var inputs = Array.prototype.slice.call(document.querySelectorAll('input.score'));
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { saved = {}; }
+  inputs.forEach(function (inp) {
+    if (saved[inp.id] !== undefined && saved[inp.id] !== '') inp.value = saved[inp.id];
+  });
+  function show(v) { return Number.isInteger(v) ? String(v) : v.toFixed(1); }
+  function totals() {
+    var sum = 0, any = false;
+    inputs.forEach(function (inp) {
+      var max = Number(inp.getAttribute('data-max'));
+      var cell = document.querySelector('[data-score-for="' + inp.id + '"]');
+      var raw = inp.value.trim();
+      var v = raw === '' ? NaN : Math.max(0, Math.min(max, Number(raw)));
+      if (!isNaN(v)) { sum += v; any = true; if (cell) cell.textContent = show(v); }
+      else if (cell) { cell.textContent = '–'; }
+    });
+    var t = any ? show(sum) : '–';
+    document.getElementById('cover-total').textContent = t;
+    document.getElementById('bar-total').textContent = t;
+  }
+  function persist() { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {} }
+  inputs.forEach(function (inp) {
+    inp.addEventListener('input', function () { saved[inp.id] = inp.value; persist(); totals(); });
+  });
+  document.getElementById('clear-scores').addEventListener('click', function () {
+    saved = {}; inputs.forEach(function (inp) { inp.value = ''; }); persist(); totals();
+  });
+  totals();
+})();
+</script>
+</body>
+</html>
